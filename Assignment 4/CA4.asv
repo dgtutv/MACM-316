@@ -24,7 +24,7 @@ end
 %Function that runs the one iteration of the bisection method
 function [p, a, b, converged] = bisectionIteration(p, a, b, tol)
     converged = false;
-    if f(p) == 0 || (b-a)/2 < tol
+    if f(p) == 0 || p < tol
         converged = true;
     elseif sameSign(f(p), f(a))
         a = p;
