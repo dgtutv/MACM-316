@@ -1,17 +1,32 @@
-%Calculate the first two roots
-a1 = 0;
-b1 = 3;
+%Choose our parameters
+M = 10000;
+%Calculate the first 3 roots
+a1 = 2.4;
+b1 = 2.5;
 p1 = getP(a1, b1);
 roots(1) = bisection(p1, a1, b1, 1e-6);
-a2 = 5;
-b2 = 7.5;
+a2 = 5.5;
+b2 = 5.6;
 p2 = getP(a2, b2);
 roots(2) = bisection(p2, a2, b2, 1e-6);
-%Calculate the third root as root 1 & 2 were calculated
+a3 = 8.5;
+b3 = 8.6;
+p3 = getP(a3, b3);
+roots(3) = bisection(p3, a3, b3, 1e-6);
+%Find the average difference between the roots
+distance(1) = abs(roots(2)-roots(1));
+distance(2) = abs(roots(3)-roots(2));
+diff = mean(distance);
+%Iterate over the roots M times, using the average distance between the first 3
+%roots to increment a
+for i=4:M
+    a = roots(i-1) + diff;
+    b = a + 0.1;
+    roots(i) = bisection(roots(i-1), a, b, 1e-6);
+    distance(i-1) = abs(roots(i)-roots(i-1));
+    diff = mean(distance);
+end
 disp(roots)
-%Calculate the third root by putting the second root in fpr 
-
-
 
 %-----------------------------------FUNCTIONS--------------------------------------------%
 %Function that runs the bisection method
