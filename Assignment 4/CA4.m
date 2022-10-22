@@ -31,9 +31,15 @@ for i=4:20
     end
     roots(i) = bisection(getP(a, b), a, b, 1e-12);
     diff = abs(roots(i) - roots(i-1));
-    disp(roots(i))
 end
-
+for i=1:length(roots)
+    testRoot = fzero(@(x) besselj(0, x), roots(i));
+    %if the relative error >e-10, the function has failed
+    if(abs(testRoot-roots(i))/abs(testRoot) >1e-10)
+        disp("FAIL")
+        return
+    end
+end
 %-----------------------------------FUNCTIONS--------------------------------------------%
 %Function that runs the bisection method
 function p = bisection(p, a, b, tol)
