@@ -1,10 +1,5 @@
-%plot the bessel
-z = 0:0.1:20;
-plot(z, besselj(0, z));
-grid on
-line(xlim, [0,0], 'Color', 'k');
 %Choose our parameters
-M = 10000;
+M = 5000; %5000 seems to be the cutoff before PC takes off like a airplane
 roots = [];
 %Calculate the first 3 roots
 a1 = 2.4;
@@ -24,7 +19,7 @@ roots(3) = bisection(p3, a3, b3, 1e-15);
 diff = roots(3)-roots(2);
 a = a3; 
 b = b3;
-for i=4:5000 %5000 seems to be the cutoff before PC takes off like a plane
+for i=4:M 
     a = a+diff;
     b = b+diff;
     while sameSign(f(a), f(b))
@@ -36,6 +31,26 @@ for i=4:5000 %5000 seems to be the cutoff before PC takes off like a plane
         disp("Broke at " + i + " with x = " + roots(i)+" and f(x) = "+f(roots(i)));
     end
 end
+close all 
+%Plot the bessel
+z = 0:0.1:20;
+plot(z, besselj(0, z));
+line(xlim, [0,0], 'Color', 'k');
+figure;
+%Scatterplot of data
+plot(m, roots, "r*");
+hold on
+%Compute our linear approximation
+m = linspace(1, M, M);
+p1 = polyfit(m, roots, 1);
+f1 = polyval(p1, m);
+plot(m, f1, "b");
+hold off
+%In finding the slope, we can now compute the asymptotic behaviour of xM, by solving for x and taking a limit 
+format longg
+disp("alpha = "+p1(1)+" which is approximately pi")
+disp("beta = "+p1(2)/p1(1)+" which is approximately -1/4")
+
 %-----------------------------------FUNCTIONS--------------------------------------------%
 %Function that runs the bisection method
 function p = bisection(p, a, b, tol)
