@@ -24,20 +24,16 @@ roots(3) = bisection(p3, a3, b3, 1e-15);
 diff = roots(3)-roots(2);
 a = a3; 
 b = b3;
-for i=4:20
+for i=4:5000 %5000 seems to be the cutoff before PC takes off like a plane
     a = a+diff;
+    b = b+diff;
     while sameSign(f(a), f(b))
         b = b+1;
     end
     roots(i) = bisection(getP(a, b), a, b, 1e-12);
     diff = abs(roots(i) - roots(i-1));
-end
-for i=1:length(roots)
-    testRoot = fzero(@(x) besselj(0, x), roots(i));
-    %if the relative error >e-10, the function has failed
-    if(abs(testRoot-roots(i))/abs(testRoot) >1e-10)
-        disp("FAIL")
-        return
+    if((f(roots(i)))> 1e-5)
+        disp("Broke at " + i + " with x = " + roots(i)+" and f(x) = "+f(roots(i)));
     end
 end
 %-----------------------------------FUNCTIONS--------------------------------------------%
