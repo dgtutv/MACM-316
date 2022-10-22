@@ -1,8 +1,11 @@
 %plot the bessel
 z = 0:0.1:20;
-plot(z, besselj(0, z))
+plot(z, besselj(0, z));
+grid on
+line(xlim, [0,0], 'Color', 'k');
 %Choose our parameters
 M = 10000;
+roots = [];
 %Calculate the first 3 roots
 a1 = 2.4;
 b1 = 2.5;
@@ -12,33 +15,33 @@ a2 = 5.5;
 b2 = 5.6;
 p2 = getP(a2, b2);
 roots(2) = bisection(p2, a2, b2, 1e-15);
-a3 = 8.5;
-b3 = 8.6;
+a3 = 8;
+b3 = 9;
 p3 = getP(a3, b3);
 roots(3) = bisection(p3, a3, b3, 1e-15);
-%Find the average difference between the roots
-distance(1) = abs(roots(2)-roots(1));
-distance(2) = abs(roots(3)-roots(2));
-diff = mean(distance);
 %Iterate over the roots M times, using the average distance between the first 3
 %roots to increment a
-for i=4:M
-    a = roots(i-1) + diff;
-    b = a + 0.1;
-    roots(i) = bisection(roots(i-1), a, b, 1e-15);
+diff = roots(3)-roots(2);
+a = a3; 
+b = b3;
+for i=4:20
+    a = a+diff;
+    while sameSign(f(a), f(b))
+        b = b+1;
+    end
+    roots(i) = bisection(getP(a, b), a, b, 1e-12);
+    diff = abs(roots(i) - roots(i-1));
     disp(roots(i))
-    distance(i-1) = abs(besselj(0, roots(i))-bessroots(i-1));
-    diff = mean(distance);
 end
-disp(roots)
 
 %-----------------------------------FUNCTIONS--------------------------------------------%
 %Function that runs the bisection method
 function p = bisection(p, a, b, tol)
-    while 1
+    simp = true;
+    while simp
         [p, a, b] = bisectionIteration(p, a, b);
-        if f(p) == 0 || (b-a)/2 < tol
-            return 
+        if f(p) == 0 || abs(b-a)/2 < tol
+            simp = false; 
         end
     end
 end
@@ -60,7 +63,7 @@ function y = f(x)
 end
 %Function that computes p for the bisection method
 function p = getP(a, b)
-    p = (a+b)/2;
+    p = a + (b-a)/2;
 end
 %Functon that checks if two variables have the same sign
 function isSame = sameSign(a, b)
