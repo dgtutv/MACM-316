@@ -37,19 +37,21 @@ z = 0:0.1:20;
 plot(z, besselj(0, z));
 line(xlim, [0,0], 'Color', 'k');
 figure;
+m = linspace(1, M, M);
 %Scatterplot of data
 plot(m, roots, "r*");
 hold on
 %Compute our linear approximation
-m = linspace(1, M, M);
 p1 = polyfit(m, roots, 1);
 f1 = polyval(p1, m);
 plot(m, f1, "b");
 hold off
 %In finding the slope, we can now compute the asymptotic behaviour of xM, by solving for x and taking a limit 
 format longg
-disp("alpha = "+p1(1)+" which is approximately pi")
-disp("beta = "+p1(2)/p1(1)+" which is approximately -1/4")
+disp("alpha = ")
+disp(p1(1))
+disp("beta = ")
+disp(p1(2)/p1(1))
 
 %-----------------------------------FUNCTIONS--------------------------------------------%
 %Function that runs the bisection method
