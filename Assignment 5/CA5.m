@@ -6,17 +6,18 @@ nMax = 20;
 x = [];
 f1 = @(x) 1/(5-4*x);
 f2 = @(x) 1/(1+16*(x^2));
-for n=2:nMax
+for n=3:nMax
     %Compute the equally-spaced nodes
     for i=0:n-1
         x(i+1) = -1+(2*i)/(n-1);
     end
-    disp(x)
     %Compute grid?
-    grid = -1: 2/n-1 : 1;
+    grid = -1: 2/(n-1) : 1;
     %Compute the interpolating polynomial for f1(x) and f2(x)
     w1 = baryweights(x);
     w2 = baryweights(x);
+    disp(w1)
+    disp(w2)
     u1 = baryinterp(x, w1, f1, grid); %<-- something is wrong here
     u2 = baryinterp(x, w2, f2, grid);
     %Compute the error of the interpolating polynomial
