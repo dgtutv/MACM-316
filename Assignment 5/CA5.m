@@ -12,14 +12,16 @@ for n=3:nMax
         x(i+1) = -1+(2*i)/(n-1);
     end
     %Compute grid?
-    grid = -1: 2/(n-1) : 1;
+    disp(f1(x)) %Compute for each x, then make grid
+    grid1 = meshgrid(x, f1(x));
+    grid2 = meshgrid(x, f2(x));
     %Compute the interpolating polynomial for f1(x) and f2(x)
     w1 = baryweights(x);
     w2 = baryweights(x);
     disp(w1)
     disp(w2)
-    u1 = baryinterp(x, w1, f1, grid); %<-- something is wrong here
-    u2 = baryinterp(x, w2, f2, grid);
+    u1 = baryinterp(x, w1, f1, grid1); %<-- something is wrong here
+    u2 = baryinterp(x, w2, f2, grid2);
     %Compute the error of the interpolating polynomial
     eVec1 = [];
     eVec2 = [];
