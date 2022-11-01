@@ -25,17 +25,17 @@ for i=1:length(n)
     %Compute the error of the interpolating polynomial
     eVec1 = [];
     eVec2 = [];
-    for j=1:length(xi)
+    for j=1:length(interpX)
         x = interpX(j);
-        eVec1(j) = abs(u1(j) - f1(interpX(j)));
-        eVec2(j) = abs(u2(xi(j)) - f2(interpX(j)));
+        eVec1(j) = abs(u1(j) - f1(x));
+        eVec2(j) = abs(u2(j) - f2(x));
     end
-    en1(n) = max(eVec1);
-    en2(n) = max(eVec2);
+    en1(i) = max(eVec1);
+    en2(i) = max(eVec2);
 end
     
-%Plot log10(en) vs n
-x = linspace(3, nMax);
+%Plot log10(en) vs n for f1
+title("log(En) vs f(x) = 1/(5-4x) with even nodes")
 plot(x, en1);
 figure;
 plot(x, en2);
