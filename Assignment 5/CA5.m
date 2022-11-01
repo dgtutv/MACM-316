@@ -46,8 +46,20 @@ axis on;
 ylabel("log(En)");
 xlabel("N");
 title("log(En) vs f(x) = 1/(5-4x) with even nodes");
-disp(en1)
 plot(n, abs(log(en1)), "r*");
+hold off
+figure; 
+
+%Plot log10(en) vs n for f2
+disp(en1)
+hold on;
+grid on;
+axis on;
+ylabel("log(En)");
+xlabel("N");
+title("log(En) vs f(x) = 1/(1+16*(x^2)) with even nodes");
+plot(n, abs(log(en2)), "r*");
+hold off
 figure;
 %Functions
 function y = f1(x)
