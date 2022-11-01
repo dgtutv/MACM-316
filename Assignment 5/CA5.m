@@ -11,7 +11,7 @@ interpX = [-.99, -.73, -.52, -.43, -.2, .15, .31, .49, .59, .86];
 for i=1:length(n)
     xi = [];
     %Compute the equally-spaced nodes
-    xi = -1:2/n(i, 1):1;
+    xi = -1:(2*i)/n(i, 1):1;
     xi=xi';
     %Compute the barryweights
     bw = baryweights(xi);  
@@ -28,18 +28,22 @@ for i=1:length(n)
     %Compute the error of the interpolating polynomial
     eVec1 = [];
     eVec2 = [];
+    en1(i) = 0;
+    en2(i) = 0;
     for j=1:length(interpX)
         x = interpX(j);
-        disp(x)
-        eVec1(j) = abs(u1(j) - f1(x));
-        eVec2(j) = abs(u2(j) - f2(x));
+        e1 = abs(u1(j) - f1(x));
+        e2 = abs(u2(j) - f2(x));
+        if e1 > en1(i)
+            en1(i) = e1;
+        end
+        if e2 > en2(i)
+            en2(i) = e2;
+        end
     end
-    en1(i) = max(eVec1);
-    en2(i) = max(eVec2);
 end
     
 %Plot log10(en) vs n for f1
-disp(en1)
 hold on;
 grid on;
 axis on;
@@ -51,7 +55,6 @@ hold off
 figure; 
 
 %Plot log10(en) vs n for f2
-disp(en1)
 hold on;
 grid on;
 axis on;
