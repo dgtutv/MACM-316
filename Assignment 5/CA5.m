@@ -3,10 +3,10 @@ nodes = [];
 en1 = [];
 en2 = [];
 n = [5; 10; 50; 100; 200; 500; 1000];
-xi = [];
 %Choose the values we wish to interpolate at
 interpX = [-.99, -.73 -.62, -.43 -.25, .12, .31, .49, .59, .86];
 for i=1:length(n)
+    xi = [];
     %Compute the equally-spaced nodes
     xi = -1:2/n(i, 1):1;
     xi=xi';
@@ -25,9 +25,10 @@ for i=1:length(n)
     %Compute the error of the interpolating polynomial
     eVec1 = [];
     eVec2 = [];
-    for x=-1: 2/(n-1) :1
-        eVec1 = abs(u1(x) - f1(x));
-        eVec2 = abs(u2(x) - f2(x));
+    for j=1:length(interpX)
+        x = interpX(j);
+        eVec1(j) = abs(u1(j) - f1(x));
+        eVec2(j) = abs(u2(j) - f2(x));
     end
     en1(n) = max(eVec1);
     en2(n) = max(eVec2);
