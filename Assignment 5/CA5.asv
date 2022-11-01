@@ -5,21 +5,20 @@ en1 = [];
 en2 = [];
 u1 = [];
 u2 = [];
-n = [100; 150; 200; 250; 300; 350; 400; 450; 500; 550];
+n = [100; 150; 200; 250; 300; 350; 400; 450; 500; 550; 600; 650; 700; 750; 800; 850; 900; 950; 1000];
 %Choose the values we wish to interpolate at
-interpX = [-.99, -.73, -.52, -.43, -.2, .15, .31, .49, .59, .86];
+interpX = [-.96, -.71, -.51, -.22, -.12, -.08, 0, .08, .12, .22, .51, .71, .96];
 for i=1:length(n)
     xi = [];
     %Compute the equally-spaced nodes
     xi = -1:(2*i)/n(i, 1):1;
     xi=xi';
-    %Compute the Chebyshev nodes
-    Cxi = -1: cos((i*pi)/n(i, 1)) :1;
-    Cxi = Cxi';
     %Compute the barryweights for xi
     bw = baryweights(xi); 
     %Compute the barryweights for the Chebyshev nodes
-    Cbw = chebs(length(1:n(i)));
+    Cbw = chebs(length(1:n(i))+1);
+    %Compute the Chebyshev nodes
+    Cxi = chebXi(1:n(i));
     %Compute the Chebyshev nodes
     %Calculate the y values of the function at each x in xi
     y1 = [];
@@ -41,8 +40,6 @@ for i=1:length(n)
     u1 = baryinterp(xi, bw, y1, interpX);
     u2 = baryinterp(xi, bw, y2, interpX);
     %bary interp for Cxi
-    disp(xi)
-
     Cu1 = baryinterp(Cxi, Cbw, Cy1, interpX);
     Cu2 = baryinterp(Cxi, Cbw, Cy2, interpX);
     Cu3 = baryinterp(Cxi, Cbw, Cy3, interpX);
@@ -73,16 +70,24 @@ for i=1:length(n)
         Ce1 = abs(Cu1(j) - f1(x));
         Ce2 = abs(Cu2(j) - f2(x));
         Ce3 = abs(Cu3(j) - f3(x));
-        if Ce1 > en1(i)
+        if Ce1 > Cen1(i)
             Cen1(i) = Ce1;
         end
-        if Ce2 > en2(i)
+        if Ce2 > Cen2(i)
             Cen2(i) = Ce2;
         end
-        if Ce3 > en3(i)
+        if Ce3 > Cen3(i)
             Cen3(i) = Ce3;
         end
     end
+end
+
+%Find the smallest value of n (to within ±10) such that en ≤ 10^−5
+N = 0;
+while true
+    N = N + 10;
+    %Compute the barryweights for the Chebyshev nodes
+    Cbw = chebs(length(1:n(i))+1);
 end
     
 %Plot log10(en) vs n for f1
@@ -103,7 +108,7 @@ axis on;
 ylabel("log(En)");
 xlabel("N");
 title("log(En) vs f(x) = 1/(1+16*(x^2)) with even nodes");
-plot(n, abs(log(en2)), "r*");
+plot(n, log(en2), "r*");
 hold off
 figure;
 
@@ -114,7 +119,7 @@ axis on;
 ylabel("log(En)");
 xlabel("N");
 title("log(En) vs f(x) = 1/(5-4x) with Chebyshev nodes");
-plot(n, abs(log(Cen1)), "r*");
+plot(n, log(Cen1), "r*");
 hold off
 figure; 
 
@@ -125,7 +130,7 @@ axis on;
 ylabel("log(En)");
 xlabel("N");
 title("log(En) vs f(x) = 1/(1+16*(x^2)) with Chebyshev nodes");
-plot(n, abs(log(Cen2)), "r*");
+plot(n, log(Cen2), "r*");
 hold off
 figure;
 
@@ -136,9 +141,8 @@ axis on;
 ylabel("log(En)");
 xlabel("N");
 title("log(En) vs f(x) = cos(((10)^4)*x) with Chebyshev nodes");
-plot(n, abs(log(Cen3)), "r*");
+plot(n, log(Cen3), "r*");
 hold off
-figure;
 
 %Functions
 function y = f1(x)
@@ -157,4 +161,11 @@ function w = chebs(n)
     for i=2:n
         w(i) = (-1)^(i-2);
     end
+end
+function xi = chebXi(x)
+    xi = zeros(length(x),1);
+    for i=1:length(x)+1
+        xi(i) = cos(((i-1)*pi)/length(x));
+    end
+    xi = flip(xi);
 end

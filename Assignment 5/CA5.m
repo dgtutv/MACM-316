@@ -5,9 +5,9 @@ en1 = [];
 en2 = [];
 u1 = [];
 u2 = [];
-n = [100; 150; 200; 250; 300; 350; 400; 450; 500; 550];
+n = [100; 150; 200; 250; 300; 350; 400; 450; 500; 550; 600; 650; 700; 750; 800; 850; 900; 950; 1000];
 %Choose the values we wish to interpolate at
-interpX = [-.99, -.73, -.52, -.43, -.2, .15, .31, .49, .59, .86];
+interpX = [-.96, -.71, -.51, -.22, -.12, -.08, 0, .08, .12, .22, .51, .71, .96];
 for i=1:length(n)
     xi = [];
     %Compute the equally-spaced nodes
@@ -19,7 +19,6 @@ for i=1:length(n)
     Cbw = chebs(length(1:n(i))+1);
     %Compute the Chebyshev nodes
     Cxi = chebXi(1:n(i));
-    %Compute the Chebyshev nodes
     %Calculate the y values of the function at each x in xi
     y1 = [];
     y2 = [];
@@ -60,8 +59,6 @@ for i=1:length(n)
         end
     end
     %Compute the error of the interpolating polynomial for Cu1, Cu2, Cu3
-    eVec1 = [];
-    eVec2 = [];
     Cen1(i) = 0;
     Cen2(i) = 0;
     Cen3(i) = 0;
@@ -100,7 +97,7 @@ axis on;
 ylabel("log(En)");
 xlabel("N");
 title("log(En) vs f(x) = 1/(1+16*(x^2)) with even nodes");
-plot(n, abs(log(en2)), "r*");
+plot(n, log(en2), "r*");
 hold off
 figure;
 
@@ -111,7 +108,7 @@ axis on;
 ylabel("log(En)");
 xlabel("N");
 title("log(En) vs f(x) = 1/(5-4x) with Chebyshev nodes");
-plot(n, abs(log(Cen1)), "r*");
+plot(n, log(Cen1), "r*");
 hold off
 figure; 
 
@@ -122,7 +119,7 @@ axis on;
 ylabel("log(En)");
 xlabel("N");
 title("log(En) vs f(x) = 1/(1+16*(x^2)) with Chebyshev nodes");
-plot(n, abs(log(Cen2)), "r*");
+plot(n, log(Cen2), "r*");
 hold off
 figure;
 
@@ -133,8 +130,37 @@ axis on;
 ylabel("log(En)");
 xlabel("N");
 title("log(En) vs f(x) = cos(((10)^4)*x) with Chebyshev nodes");
-plot(n, abs(log(Cen3)), "r*");
+plot(n, log(Cen3), "r*");
 hold off
+
+%Find the smallest value of n (to within ±10) such that en ≤ 10^−5
+N = 100000;
+while true
+    N = N + 10;
+    %Compute the barryweights for the Chebyshev nodes
+    Cbw = chebs(length(1:N)+1);
+    %Compute the Chebyshev nodes
+    Cxi = chebXi(1:N);
+    %Calculate the y values of the function at each x in Cxi
+    Cy = [];
+    for j=1:length(Cxi)
+        Cy(j,1) = f3(Cxi(j,1));
+    end
+    Cu = baryinterp(Cxi, Cbw, Cy, interpX);
+    %Compute the error of the interpolating polynomial
+    Cen = 0;
+    for j=1:length(interpX)
+        x = interpX(j);
+        Ce = abs(Cu(j) - f3(x));
+        if Ce > Cen
+            Cen = Ce;
+        end
+    end
+    if Cen <= 1e-5
+        disp(N)
+        break
+    end
+end
 
 %Functions
 function y = f1(x)
