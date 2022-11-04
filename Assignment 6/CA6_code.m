@@ -13,12 +13,17 @@ for n=100:100:1000
         end
     end
 end
-format longg
+
 %How many digits of I can you accurately compute?
-%disp(Q)
+disp("Last 5 original Q:");
+for i=length(Q)-5:length(Q)
+    format longg
+    disp(Q(i));
+end
+
 %Let q be Q hat
 q=[];
-N=2000;
+N=7000;
 for n=100:100:N
     Q(n/100) = 0;
     for i=1:n
@@ -36,6 +41,10 @@ for n=100:100:N
         q((n/100)-3) = Q((n/100)-3) - (( Q((n/100)-2) - Q((n/100)-1) ).^2 / ( Q(n/100) - 2.*Q((n/100)-1) + Q((n/100)-2) ));
     end
 end
+
+
+disp("Last 5 Q hat:")
 for i=length(q)-5:length(q)
+    format longg
     disp(q(i));
 end
