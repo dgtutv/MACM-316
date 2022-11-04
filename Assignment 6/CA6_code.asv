@@ -2,14 +2,15 @@ Q = [];
 f = @(x) (x.^(-1)).*sin((x.^(-1)).*log(x));
 for n=100:100:1000
     Q(n/100) = 0;
-    a(1) = 1;
-    for i=2:n
+    for i=1:n
         b=fzero(@(x) x*exp(x)-i*pi,0);
         a(i)=exp(-b);
-        %Compute integral with numerical quadrature
-        I = integral(f, a(i-1), a(i));
-        %Compute Q(n) sum
-        Q(n/100) = Q(n/100) + I; 
+        if i>1
+            %Compute integral with numerical quadrature
+            I = integral(f, a(i-1), a(i));
+            %Compute Q(n) sum
+            Q(n/100) = Q(n/100) + I; 
+        end
     end
 end
 
@@ -24,14 +25,15 @@ q=[];
 N=7000;
 for n=100:100:N
     Q(n/100) = 0;
-    a(1) = 1;
-    for i=2:n
+    for i=1:n
         b=fzero(@(x) x*exp(x)-(i-1)*pi,0);
         a(i)=exp(-b);
-        %Compute integral with numerical quadrature
-        I = integral(f, a(i-1), a(i));
-        %Compute Q(n) sum
-        Q(n/100) = Q(n/100) + I; 
+        if i>1
+            %Compute integral with numerical quadrature
+            I = integral(f, a(i-1), a(i));
+            %Compute Q(n) sum
+            Q(n/100) = Q(n/100) + I; 
+        end
     end
     if (n/100)>3
         %Compute Aitken's triangle square method
