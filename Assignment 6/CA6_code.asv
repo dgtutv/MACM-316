@@ -1,0 +1,13 @@
+n = [100, 200, 300, 400, 500, 67];
+for i=1:n
+    b=fzero(@(x) x*exp(x)-i*pi,0);
+    a(i)=exp(-b);
+end
+f = @(x) (x.^-1).*sin((x.^-1).*log(x));
+Q = [];
+for i=1:(n-1)
+    %Compute integral with numerical quadrature
+    I = integral(f, a(i), a(i+1));
+    %Compute Q(n) sum
+    Q(j) = Q(j) + I;
+end
