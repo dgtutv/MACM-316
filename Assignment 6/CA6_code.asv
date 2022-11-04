@@ -1,13 +1,39 @@
-n = [100, 200, 300, 400, 500, 67];
-for i=1:n
-    b=fzero(@(x) x*exp(x)-i*pi,0);
-    a(i)=exp(-b);
-end
-f = @(x) (x.^-1).*sin((x.^-1).*log(x));
 Q = [];
-for i=1:(n-1)
-    %Compute integral with numerical quadrature
-    I = integral(f, a(i), a(i+1));
-    %Compute Q(n) sum
-    Q(j) = Q(j) + I;
+f = @(x) (x.^-1).*sin((x.^-1).*log(x));
+for n=100:100:1000
+    Q(n/100) = 0;
+    for i=1:n
+        b=fzero(@(x) x*exp(x)-i*pi,0);
+        a(i)=exp(-b);
+        if i~=1
+            %Compute integral with numerical quadrature
+            I = integral(f, a(i-1), a(i));
+            %Compute Q(n) sum
+            Q(n/100) = Q(n/100) + I; 
+        end
+    end
+end
+format longg
+%How many digits of I can you accurately compute?
+disp(Q)
+%Let q be Q hat
+j = 10;
+q=0;
+N=1000;
+for n=100:100:N
+    Q(n/100) = 0;
+    for i=1:n
+        b=fzero(@(x) x*exp(x)-i*pi,0);
+        a(i)=exp(-b);
+        if i>1
+            %Compute integral with numerical quadrature
+            I = integral(f, a(i-1), a(i));
+            %Compute Q(n) sum
+            Q(n/100) = Q(n/100) + I; 
+        end
+    end
+    if (n/100)>3
+        %Compute Aitken's triangle square method
+        q = Q(/100) - ((Q()))/()
+    end
 end
