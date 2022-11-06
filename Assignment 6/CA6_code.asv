@@ -15,7 +15,7 @@ for n=100:100:1000
 end
 
 %How many digits of I can you accurately compute?
-disp("Last 5 original Q:");
+disp("Last 5 original Q for original function:");
 for i=length(Q)-5:length(Q)
     format longg
     disp(Q(i));
@@ -40,7 +40,7 @@ for n=100:100:N
     end
 end
 
-disp("Last 5 Q hat:")
+disp("Last 5 Q hat for original function:")
 for i=length(q)-5:length(q)
     format longg
     disp(q(i));
@@ -52,10 +52,10 @@ for n=100:100:N
     Q(n/100) = 0;
     a(1) = 1;
     for i=2:n
-        b=fzero(@(x) ,0);
-        a(i)=exp(-b);
+        b=fzero(@(x) (x* 2)*exp(x)-((i-1)*pi),0);
+        a(i)=exp(-b/2);
         %Compute integral with numerical quadrature
-        I = integral(f, a(i-1), a(i));
+        I = integral(g, a(i-1), a(i));
         %Compute Q(n) sum
         Q(n/100) = Q(n/100) + I; 
     end
@@ -65,3 +65,8 @@ for n=100:100:N
     end
 end
 
+disp("Last 5 Q hat for secondary function:")
+for i=length(q)-5:length(q)
+    format longg
+    disp(q(i));
+end
