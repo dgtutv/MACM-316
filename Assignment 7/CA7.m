@@ -26,9 +26,23 @@ fprintf("f2(x):\n   I1: %.12f\n   I2: %.12f\n",outputf2(2,end), outputf2(3,end))
 fprintf("f3(x):\n   I1: %.12f\n   I2: %.12f\n",outputf1(2,end), outputf1(3,end));   %f3
 
 %Compute the absolute errors of the functions
-errorf1 = absoulteError(outputf1, truef1);
-errorf2 = absoulteError(outputf2, truef2);
-errorf3 = absoulteError(outputf3, truef3);
+errorf1 = absoluteError(outputf1, truef1);
+errorf2 = absoluteError(outputf2, truef2);
+errorf3 = absoluteError(outputf3, truef3);
+
+%Plot the absolute error of our approximations vs N
+close all;
+hold on;
+grid on;
+axis on;
+ylabel("log(|error|)");
+xlabel("log(N)");
+title("Loglog plot of absolute error vs N for interval I1");
+plot(log(outputf1(1,:)), log(errorf1(1,:)), "r*",'DisplayName', 'f1(x) = sin(0.5x)');
+plot(log(outputf2(1,:)), log(errorf2(1,:)), "m*",'DisplayName', 'f2(x) = |sin(2x)|');
+plot(log(outputf3(1,:)), log(errorf3(1,:)), "b*",'DisplayName', 'f3(x) = cos(x)');
+legend
+
 
 %Define out computational functions
 function output = approximateIntegral(f, I1, I2, Nmax)
