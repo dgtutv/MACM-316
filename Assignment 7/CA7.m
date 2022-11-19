@@ -22,13 +22,7 @@ outputf3 = approximateIntegral(f3, I1, I2, 1000);
 %Compute the absolute errors of the functions
 errorf1 = absoluteError(outputf1, truef1);
 errorf2 = absoluteError(outputf2, truef2);
-errorf3 = absoluteError(outputf3, truef3);
-
-%Store log(N) and log(error) to prevent log(0) when plotting
-N = length(outputf1(1,:));
-plotValsf1 = [logVal(outputf1(1,:),N); logVal(outputf1(2,:),N); logVal(outputf1(3,:),N)];              %stored as [log(N)     ]
-plotValsf2 = [logVal(outputf2(1,:),N); logVal(outputf2(2,:),N); logVal(outputf2(3,:),N)];                        %[log(I1 err)]
-plotValsf3 = [logVal(outputf3(1,:),N); logVal(outputf3(2,:),N); logVal(outputf3(3,:),N)] ;                       %[log(I2 err)]           
+errorf3 = absoluteError(outputf3, truef3);         
 
 %Output approximations to the console
 disp("Approximations")
@@ -57,11 +51,11 @@ axis on;
 ylabel("log(|error|)");
 xlabel("log(N)");
 title("Loglog plot of absolute error vs N for interval I1");
-plot(plotValsf1(1,:), plotValsf1(2,:), "r*",'DisplayName', 'f1(x) = sin(0.5x)');
-plot(plotValsf2(1,:), plotValsf2(2,:), "m*",'DisplayName', 'f2(x) = |sin(2x)|');
-plot(plotValsf3(1,:), plotValsf3(2,:), "b*",'DisplayName', 'f3(x) = cos(x)');
-legend
-hold off
+plot(log(outputf1(1,:)), log(errorf1(1,:)), "r*",'DisplayName', 'f1(x) = sin(0.5x)');
+plot(log(outputf2(1,:)), log(errorf2(1,:)), "m*",'DisplayName', 'f2(x) = |sin(2x)|');
+plot(log(outputf3(1,:)), log(errorf3(1,:)), "b*",'DisplayName', 'f3(x) = cos(x)');
+legend;
+hold off;
 figure;
 
 hold on;
@@ -69,12 +63,12 @@ grid on;
 axis on;
 ylabel("log(|error|)");
 xlabel("log(N)");
-title("Loglog plot of absolute error vs N for interval I2");
-plot(plotValsf1(1,:), plotValsf1(3,:), "r*",'DisplayName', 'f1(x) = sin(0.5x)');
-plot(plotValsf2(1,:), plotValsf2(3,:), "m*",'DisplayName', 'f2(x) = |sin(2x)|');
-plot(plotValsf3(1,:), plotValsf3(3,:), "b*",'DisplayName', 'f3(x) = cos(x)');
-legend
-hold off 
+title("Loglog plot of absolute error vs N for interval I1");
+plot(log(outputf1(1,:)), log(errorf1(2,:)), "r*",'DisplayName', 'f1(x) = sin(0.5x)');
+plot(log(outputf2(1,:)), log(errorf2(2,:)), "m*",'DisplayName', 'f2(x) = |sin(2x)|');
+plot(log(outputf3(1,:)), log(errorf3(2,:)), "b*",'DisplayName', 'f3(x) = cos(x)');
+legend;
+hold off;
 
 
 %Define out computational functions
@@ -95,15 +89,4 @@ function output = absoluteError(approx, actual)  %approx is expected to be in th
         end                                                                 
     end
 end
-
-function output = logVal(errs,N)
-    output = zeros(1,N);
-    for i=1:N
-        if errs(i) == 0
-            output(i) = 0;
-        else
-            output(i) = abs(log(errs(i)));
-        end
-    end
-end
-                               
+           
