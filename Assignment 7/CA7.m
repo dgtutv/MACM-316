@@ -25,14 +25,27 @@ fprintf("f1(x):\n   I1: %.12f\n   I2: %.12f\n",outputf1(2,end), outputf1(3,end))
 fprintf("f2(x):\n   I1: %.12f\n   I2: %.12f\n",outputf2(2,end), outputf2(3,end));   %f2
 fprintf("f3(x):\n   I1: %.12f\n   I2: %.12f\n",outputf1(2,end), outputf1(3,end));   %f3
 
+%Compute the absolute errors of the functions
+errorf1 = absoulteError(outputf1, truef1);
+errorf2 = absoulteError(outputf2, truef2);
+errorf3 = absoulteError(outputf3, truef3);
 
 %Define out computational functions
 function output = approximateIntegral(f, I1, I2, Nmax)
     output = zeros(3, Nmax/100);
     for N=100:100:Nmax %f1
         output(1,N/100) = N;                                                 %[N0    , N1    , ... ,Nj    ]
-        output(2,N/100) = trapezoidrule(f, I1(1), I1(2), N);        %output = [f'(N0), f'(N1), ... ,f'(Nj)] for I1
-        output(3,N/100) = trapezoidrule(f, I2(1), I2(2), N);                 %[f'(N0), f'(N1), ... ,f'(Nj)] for I2
+        output(2,N/100) = trapezoidrule(f, I1(1), I1(2), N);        %output = [g(N0), g(N1), ... ,g(Nj)] for I1, where g(x) approximates integral f(x)
+        output(3,N/100) = trapezoidrule(f, I2(1), I2(2), N);                 %[g(N0), g(N1), ... ,g(Nj)] for I2
+    end
+end
+
+function output = absoluteError(approx, actual)  %approx is expected to be in the format of output from approximateIntegral
+    output = zeros(2, length(approx(1,:)));                         
+    for i=1:length(actual)                                          %output = [|f(x)-g1(x)|, |f(x)-g2(x)|, ... , |f(x)-gN(x)|] for I1                                                   
+        for j=1:length(approx(1,:))                                          %[|f(x)-g1(x)|, |f(x)-g2(x)|, ... , |f(x)-gN(x)|] for I2
+            output(i,j) = abs(actual(i) - approx(i+1,j));           %Where gj(x) approximates the integral f(x) with j subdivisions
+        end                                                                 
     end
 end
                                
