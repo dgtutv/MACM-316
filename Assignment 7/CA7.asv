@@ -19,16 +19,35 @@ outputf1 = approximateIntegral(f1, I1, I2, 1000);
 outputf2 = approximateIntegral(f2, I1, I2, 1000);
 outputf3 = approximateIntegral(f3, I1, I2, 1000);
 
-%Output approximations into console for check
-fprintf("Test case: %.12f\n",y0);   %Test case
-fprintf("f1(x):\n   I1: %.12f\n   I2: %.12f\n",outputf1(2,end), outputf1(3,end));   %f1
-fprintf("f2(x):\n   I1: %.12f\n   I2: %.12f\n",outputf2(2,end), outputf2(3,end));   %f2
-fprintf("f3(x):\n   I1: %.12f\n   I2: %.12f\n",outputf1(2,end), outputf1(3,end));   %f3
-
 %Compute the absolute errors of the functions
 errorf1 = absoluteError(outputf1, truef1);
 errorf2 = absoluteError(outputf2, truef2);
 errorf3 = absoluteError(outputf3, truef3);
+
+%Store log(N) and log(error) to prevent log(0) when plotting
+N = outputf1(1,:);
+plotValsf1 = [logVal(N,N), logval(errorf1(1,:),N), logVal(errorf1(2,:),N)];     %stored as [log(N), log(I1 err), log(I2 err)]
+plotValsf2 = [logVal(N,N), logval(errorf2(1,:),N), logVal(errorf2(2,:),N)];
+plotValsf3 = [logVal(N,N), logval(errorf3(1,:),N), logVal(errorf3(2,:),N)];
+
+%Output approximations to the console
+disp("Approximations")
+fprintf("  Test case: %.12f\n",y0);   %Test case
+fprintf("  f1(x):\n     I1: %.12f\n     I2: %.12f\n",outputf1(2,end), outputf1(3,end));   %f1
+fprintf("  f2(x):\n     I1: %.12f\n     I2: %.12f\n",outputf2(2,end), outputf2(3,end));   %f2
+fprintf("  f3(x):\n     I1: %.12f\n     I2: %.12f\n",outputf3(2,end), outputf3(3,end));   %f3
+
+%Output actual to the console
+disp("Actual Values")
+fprintf("  f1(x):\n     I1: %.12f\n     I2: %.12f\n",truef1(1), truef1(2));   %f1
+fprintf("  f2(x):\n     I1: %.12f\n     I2: %.12f\n",truef2(1), truef2(2));   %f2
+fprintf(  "f3(x):\n     I1: %.12f\n     I2: %.12f\n",truef3(1), truef3(2));   %f3
+
+%Output errors to the console
+disp("Absolute erros")
+fprintf("  f1(x):\n     I1: %.12f\n     I2: %.12f\n",errorf1(1,end), errorf1(2,end));   %f1
+fprintf("  f2(x):\n     I1: %.12f\n     I2: %.12f\n",errorf2(1,end), errorf2(2,end));   %f2
+fprintf(  "f3(x):\n     I1: %.12f\n     I2: %.12f\n",errorf3(1,end), errorf3(2,end));   %f3
 
 %Plot the absolute error of our approximations vs N
 close all;
@@ -38,10 +57,24 @@ axis on;
 ylabel("log(|error|)");
 xlabel("log(N)");
 title("Loglog plot of absolute error vs N for interval I1");
-plot(log(outputf1(1,:)), log(errorf1(1,:)), "r*",'DisplayName', 'f1(x) = sin(0.5x)');
-plot(log(outputf2(1,:)), log(errorf2(1,:)), "m*",'DisplayName', 'f2(x) = |sin(2x)|');
-plot(log(outputf3(1,:)), log(errorf3(1,:)), "b*",'DisplayName', 'f3(x) = sin(0.5x)');
+plot(log(outputf1(2,:)), log(errorf1(1,:)), "r*",'DisplayName', 'f1(x) = sin(0.5x)');
+plot(log(outputf2(2,:)), log(errorf2(1,:)), "m*",'DisplayName', 'f2(x) = |sin(2x)|');
+plot(log(outputf3(2,:)), log(errorf3(1,:)), "b*",'DisplayName', 'f3(x) = cos(x)');
 legend
+hold off
+figure;
+
+hold on;
+grid on;
+axis on;
+ylabel("log(|error|)");
+xlabel("log(N)");
+title("Loglog plot of absolute error vs N for interval I2");
+plot(log(outputf1(3,:)), log(errorf1(2,:)), "r*",'DisplayName', 'f1(x) = sin(0.5x)');
+plot(log(outputf2(3,:)), log(errorf2(2,:)), "m*",'DisplayName', 'f2(x) = |sin(2x)|');
+plot(log(outputf3(3,:)), log(errorf3(2,:)), "b*",'DisplayName', 'f3(x) = cos(x)');
+legend
+hold off 
 
 
 %Define out computational functions
@@ -60,6 +93,17 @@ function output = absoluteError(approx, actual)  %approx is expected to be in th
         for j=1:length(approx(1,:))                                          %[|f(x)-g1(x)|, |f(x)-g2(x)|, ... , |f(x)-gN(x)|] for I2
             output(i,j) = abs(actual(i) - approx(i+1,j));           %Where gj(x) approximates the integral f(x) with j subdivisions
         end                                                                 
+    end
+end
+
+function logs = logVal(errs,N)
+    logs = zeros(N);
+    for i=1:N
+        if errs(i) == 0
+            logs(i) = 0;
+        else
+            logs(i) = log(errs(i));
+        end
     end
 end
                                
