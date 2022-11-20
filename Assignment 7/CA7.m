@@ -63,7 +63,7 @@ grid on;
 axis on;
 ylabel("log(|error|)");
 xlabel("log(N)");
-title("Loglog plot of absolute error vs N for interval I1");
+title("Loglog plot of absolute error vs N for interval I2");
 plot(log100(outputf1(1,:)), log100(errorf1(2,:)), "r*",'DisplayName', 'f1(x) = sin(0.5x)');
 plot(log100(outputf2(1,:)), log100(errorf2(2,:)), "m*",'DisplayName', 'f2(x) = |sin(2x)|');
 plot(log100(outputf3(1,:)), log100(errorf3(2,:)), "b*",'DisplayName', 'f3(x) = cos(x)');
@@ -78,18 +78,18 @@ pFits(3,:) = polyfit(log100(outputf1(1,:)), log100(errorf2(1,:)), 1);
 pFits(4,:) = polyfit(log100(outputf1(1,:)), log100(errorf2(2,:)), 1);
 pFits(5,:) = polyfit(log100(outputf1(1,:)), log100(errorf3(1,:)), 1);
 pFits(6,:) = polyfit(log100(outputf1(1,:)), log100(errorf3(2,:)), 1);
-orders = pFits(:,1)*-1;
+orders = -1*pFits(:,1);     %multiply by -1 as this is order of growth, and we want order of convergence
 
 %Display the rate of convergence for each each error approaching 0
 disp("Rate of convergence for errors")
 fprintf("  f1(x):\n     I1: %.12f\n     I2: %.12f\n",orders(1), orders(2));   %f1
 fprintf("  f2(x):\n     I1: %.12f\n     I2: %.12f\n",orders(3), orders(4));   %f2
-fprintf(  "f3(x):\n     I1: %.12f\n     I2: %.12f\n",orders(5), orders(6));   %f3
+fprintf("  f3(x):\n     I1: %.12f\n     I2: %.12f\n",orders(5), orders(6));   %f3
 
 %Define out computational functions
 function output = approximateIntegral(f, I1, I2, Nmax)
     output = zeros(1, Nmax/100);
-    for N=100:100:Nmax %f1
+    for N=100:100:Nmax
         output(1,N/100) = N;                                                 %[N0    , N1    , ... ,Nj    ]
         output(2,N/100) = trapezoidrule(f, I1(1), I1(2), N);        %output = [g(N0), g(N1), ... ,g(Nj)] for I1, where g(x) approximates integral f(x)
         output(3,N/100) = trapezoidrule(f, I2(1), I2(2), N);                 %[g(N0), g(N1), ... ,g(Nj)] for I2
