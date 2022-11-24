@@ -1,29 +1,23 @@
-%-----------------Define our mathematical functions-----------------------%
-syms q(t) p(t)
-Dq = diff(q) == p;
-Dp = diff(p) == -q/(diff(q, t).^2 + diff(q,t,2).^2).^(3/2);
-Q = [diff(q,t); diff(q,t,2)];       %q(t) = [q1(t); q2(t)]
-P = [diff(p,t); diff(p,t,2)];       %p(t) = [p1(t); p2(t)]
-
-
 %------------------------------Part 1-------------------------------------%
 e = 0.6;
-N = 200;
+h = 0.0005;
+N = 200/h;
 %Initial values
-q1 = zeros(N,1);
-q2 = zeros(N,1);
-p1 = zeros(N,1);
-p2 = zeros(N,1);
+q1 = zeros(1,N);
+q2 = zeros(1,N);
+p1 = zeros(1,N);
+p2 = zeros(1,N);
 q1(1) = 1-e;
 q2(1) = 0;
 p1(1) = 0;
 p2(1) = sqrt((1+e)/(1-e));
+
+q = [q1; q2];
+p = [p1; p2];
 %Mesh
-mesh = a:h:b;
+mesh = 0:0.0005:200;
 %Euler steps
 for i=1:N-1
-    q1(i+1) = q1(i) + h*p1(i);
-    q2(i+1) = q2(i) + h*p2(i);
-    p1(i+1) = p1(i) + h*;
-    p2(i+1) = p2(i) + h*Dp(p2(i));
+    q(i+1) = q(i) + h*p(i);
+    p(i+1) = p(i) - h*q(i)/((q(1,i).^2 + q(1,i).^2).^(3/2));
 end
