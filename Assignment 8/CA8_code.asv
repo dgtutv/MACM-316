@@ -10,5 +10,4 @@ function output = Euler(dq, dp, q, p, h, N)
     for i = 2:N
         q(i) = q + dq * h;
         p (i) = p + dp *h;
-    end
 end
