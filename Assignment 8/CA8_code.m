@@ -1,6 +1,5 @@
 %Initial values & Solve
-e = 0.6;
-y = [1-e, 0; 0, sqrt(((1+e)/(1-e)))];
+y = [0.4, 0; 0, 2];
 f = @(t, y) [y(2,:); -y(1,:)/((y(1,1).^2 + y(1,2).^2).^(3/2))];
 a = 0;
 b = 200;
@@ -36,14 +35,16 @@ title("Angular momentum vs time (standard Euler's)");
 xlabel("Time");
 ylabel("Angular Momentum");
 plot(t, A);
+ylim([0.8,0.9]);
 
 %Plot H(t)
-figure(3);
+subplot(2,1,2);
 grid on;
 title("Hamiltonian vs time (standard Euler's)");
 xlabel("Time");
 ylabel("Hamiltonian");
 plot(t, H);
+ylim([-0.5,-0.3]);
 
 %-----------------------Symplectic Euler plots----------------------------%
 
@@ -63,6 +64,7 @@ title("Angular momentum vs time (symplectic Euler's)");
 xlabel("Time");
 ylabel("Angular Momentum");
 plot(t, AS);
+ylim([0.7999999999999999,0.8000000000000005]);
 
 %Plot H(t)
 subplot(2,1,2);
@@ -71,15 +73,17 @@ title("Hamiltonian vs time (symplectic Euler's)");
 xlabel("Time");
 ylabel("Hamiltonian");
 plot(t, HS);
-
+ylim([-.501,-.499]);
 
 
 %--------------------------Euler's Method---------------------------------%
 function [q, p, A, H, qS, pS, AS, HS] = Euler(y, f, h, a, b)
     N = (b-a)/h;
     t = a;
-    qS = y(1,:);
-    pS = y(2,:);
+    q = [y(1,:)];
+    p = [y(2,:)];
+    qS = [y(1,:)];
+    pS = [y(2,:)];
     for i = 2:N
         %Regular Euler's with A and H calculations
         y = y + h*f(t, y);

@@ -1,6 +1,5 @@
 %Initial values & Solve
-e = 0.6;
-y = [1-e, 0; 0, sqrt(((1+e)/(1-e)))];
+y = [0.4, 0; 0, 2];
 f = @(t, y) [y(2,:); -y(1,:)/((y(1,1).^2 + y(1,2).^2).^(3/2))];
 a = 0;
 b = 200;
@@ -22,74 +21,56 @@ p2S = pS(:,2);
 %Plot in q1-q2 plane
 figure(1);
 close all;
-hold on;
 grid on;
-axis on;
 title("Approximate position of the planet at time tn (standard Euler's)");
 xlabel("q1(t)");
 ylabel("q2(t)");
 plot(q1, q2);
-hold off;
 
 %Plot A(t)
 figure(2);
 subplot(2,1,1);
-hold on;
 grid on;
-axis on;
 title("Angular momentum vs time (standard Euler's)");
 xlabel("Time");
 ylabel("Angular Momentum");
+ylim([0.8,0.9])
 plot(t, A);
-hold off;
-figure;
 
 %Plot H(t)
 figure(3);
-subplot(2,1,2);
-hold on;
 grid on;
-axis on;
 title("Hamiltonian vs time (standard Euler's)");
 xlabel("Time");
 ylabel("Hamiltonian");
 plot(t, H);
-hold off;
 
 %-----------------------Symplectic Euler plots----------------------------%
 
 %Plot in q1-q2 plane
 figure(4);
-hold on;
 grid on;
-axis on;
 title("Approximate position of the planet at time tn (symplectic Euler's)");
 xlabel("q1(t)");
 ylabel("q2(t)");
 plot(q1S, q2S);
-hold off;
 
 %Plot A(t)
 figure(5);
-hold on;
+subplot(2,1,1);
 grid on;
-axis on;
 title("Angular momentum vs time (symplectic Euler's)");
 xlabel("Time");
 ylabel("Angular Momentum");
 plot(t, AS);
-hold off;
 
 %Plot H(t)
-figure(6);
-hold on;
+subplot(2,1,2);
 grid on;
-axis on;
 title("Hamiltonian vs time (symplectic Euler's)");
 xlabel("Time");
 ylabel("Hamiltonian");
 plot(t, HS);
-hold off;
 
 
 
@@ -97,8 +78,10 @@ hold off;
 function [q, p, A, H, qS, pS, AS, HS] = Euler(y, f, h, a, b)
     N = (b-a)/h;
     t = a;
-    qS = y(1,:);
-    pS = y(2,:);
+    q = [y(1,:)];
+    p = [y(2,:)];
+    qS = [y(1,:)];
+    pS = [y(2,:)];
     for i = 2:N
         %Regular Euler's with A and H calculations
         y = y + h*f(t, y);
