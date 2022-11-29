@@ -2,26 +2,45 @@
 
 %Initial values & Solve
 h = 0.0005;
-q = [1-0.6; 0];
-p = [0, sqrt(((1+0.6)/(1-0.6)))];
-dq = @(t, p, q) p;
-dp = @(t, p, q) -1/(q(1).^2 +q(2).^2).^(3/2) * q;
-[Q1, P1] = Euler(dq, dp, q, p, 0.0005, 0, 200);   
-
-%use their method for X, use wq, and wp tho
+e = 0.6;
+y = [1-e, 0; 0, sqrt(((1+e)/(1-e)))];
+f = @(t, y) [y(2,:); -y(1,:)/((y(1,1).^2 + y(1,2).^2).^(3/2))];
+[q, p] = Euler(y, f, 0.0005, 0, 200);   
+q1 = q(:,1);
+q2 = q(:,2);
+p1 = p(:,1);
+p2 = p(:,2);
 
 %Plot in q1-q2 plane
-plot(Q1(1), Q1(2));
+close all;
+hold on;
+grid on;
+axis on;
+title("Approximate position of the planet at time tn");
+xlabel("q1(t)");
+ylabel("q2(t)")
+plot(q1, q2);
+hold off;
+
+%------------------------------Part 2-------------------------------------%
+
+%Compute angular momentum A(t) and Hamiltonian H(t)
+A = q1*p2 - q2*p1;
+H = 0.5*(p1^2 + p2^2) - 1/sqrt(q1^2 + q2^2);
+
+%Plot in q1-q2 plane
+disp(A);
+disp(H);
 
 %---------------------------Eulers Method---------------------------------%
-function [Q,P] = Euler(dq, dp, q, p, h, a, b)
+function [q, p] = Euler(y, f, h, a, b)
     N = (b-a)/h;
-    t = [a];
-    Q = [q];
-    P = [p];
+    t = a;
     for i = 2:N
-        disp(p + dp(t,p,q) *h);
-        Q(i, :) = q + dq(t,p,q) * h;
-        P (i, :) = p + dp(t,p,q) *h;
+        y = y + h*f(t, y);
+        t = t + h;
+        %Seperate q and p for easier understanding of whats happening
+        q(i, :) = y(1, :);
+        p(i, :) = y(2, :);
     end
 end
